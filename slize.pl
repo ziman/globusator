@@ -16,12 +16,15 @@ sub slizik {
 	my $roll  = 0; # tilt
 
 	# Calculate integral bounds
+	my ($centerx, $dx) = (1.7207, 0.0747);
+	my ($centery, $dy) = (0.8640, 0.5000);
+
 	my $imgw  = round(3.448 * $h);
 	my $imgh  = round(1.724 * $h);
-	my $left  = round(1.646 * $h);
-	my $right = round(1.7954* $h);
-	my $top   = round(0.364 * $h);
-	my $bot   = round(1.364 * $h);
+	my $left  = round(($centerx-$dx) * $h);
+	my $right = round(($centerx+$dx) * $h);
+	my $top   = round(($centery-$dy) * $h);
+	my $bot   = round(($centery+$dy) * $h);
 
 	print "Generating $ptofile...\n";
 	open my $F, ">$ptofile";
@@ -39,10 +42,18 @@ sub slizik {
 		. "-quality $quality "
 		. "-crop "
 			. ($right-$left)."x".($bot-$top)
-			. "+".$left."+".$top." $outfile");
+			. "+".$left."+".$top." "
+		. "-fill '#2c5573' -fuzz 5% -opaque black "
+		. "$outfile"
+	);
+	
+	print "$outfile saved.\n";
 }
 
-slizik(1000, 180, 'brno8000.jpg', 'brno-slizik.jpg');
+for my $i (0..11)
+{
+	slizik(400, $i*30, 'brno8000.jpg', "sliz-$i.jpg");
+}
 
 
 
