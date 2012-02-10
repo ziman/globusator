@@ -1,6 +1,9 @@
 #!/usr/bin/perl -w
 
 use strict;
+use warnings;
+use threads;
+
 use Math::Round;
 
 sub slizik {
@@ -51,11 +54,27 @@ sub slizik {
 	print "- OK\n";
 }
 
-my $count = 12;
-for my $i (0..$count-1)
-{
-	slizik(400, $i*360.0/$count, 'brno8000.jpg', "sliz-$i.jpg");
+my $outname = 'lr';
+my $srcfile = 'brno8000.jpg';
+my $height  = 3600;
+my $workers = 1;
+my $stripes = 12;
+
+my @threads = ();
+for my $worker (1..$workers) {
+	print "Creating worker thread $worker...\n";
+	push @threads, threads->create(sub{
+		for (my $i = $worker-1; $i < $stripes; $i += $workers) {
+			slizik($height, $i*360.0/$stripes, $srcfile, "$outname-$i.jpg");
+		}
+	});
 }
 
-
-
+print "Joining threads: ";
+my $cnt = 0;
+for my $thread (@threads)
+{
+	print ++$cnt . " ";
+	$thread->join();
+}
+print "DONE\n";
