@@ -16,7 +16,7 @@ sub slizik {
 	my $roll  = 0; # tilt
 
 	# Calculate integral bounds
-	my ($centerx, $dx) = (1.7207, 0.0747);
+	my ($centerx, $dx) = (1.7207, 0.0900);
 	my ($centery, $dy) = (0.8640, 0.5000);
 
 	my $imgw  = round(3.448 * $h);
@@ -50,9 +50,10 @@ sub slizik {
 	print "$outfile saved.\n";
 }
 
-for my $i (0..11)
+my $count = 12;
+for my $i (0..$count-1)
 {
-	slizik(400, $i*30, 'brno8000.jpg', "sliz-$i.jpg");
+	slizik(400, $i*360.0/$count, 'brno8000.jpg', "sliz-$i.jpg");
 }
 
 
