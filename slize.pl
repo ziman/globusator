@@ -12,8 +12,8 @@ sub slizik {
 	my $ptofile = "brno.pto";
 
 	# Pitch and roll
-	my $pitch = 0; # city centre: equator/poles?
-	my $roll  = 0; # tilt
+	my $pitch = 90; # city centre: equator/poles?
+	my $roll  = 0;  # tilt
 
 	# Calculate integral bounds
 	my ($centerx, $dx) = (1.7207, 0.0900);
@@ -26,7 +26,8 @@ sub slizik {
 	my $top   = round(($centery-$dy) * $h);
 	my $bot   = round(($centery+$dy) * $h);
 
-	print "Generating $ptofile...\n";
+	print "$outfile: ";
+	print "PTO ";
 	open my $F, ">$ptofile";
 	print $F "p f6 w$imgw h$imgh v179 E0 R0 S$left,$right,$top,$bot n\"$format r:CROP\"\n";
 	print $F "m g1 i0 f0 m2 p0.00784314\n";
@@ -35,9 +36,9 @@ sub slizik {
 	print $F "v r0\nv p0\nv y0\nv\n";
 	close $F;
 
-	print "Running nona: $ptofile -> $outfile...\n";
+	print "NONA ";
 	system("nona -o $outfile $ptofile") == 0 or die "Could not remap image";
-	print "Cropping the resulting image...\n";
+	print "POSTPROC ";
 	system("mogrify "
 		. "-quality $quality "
 		. "-crop "
@@ -47,7 +48,7 @@ sub slizik {
 		. "$outfile"
 	) == 0 or die "Could not postprocess image.";
 	
-	print "$outfile saved.\n";
+	print "- OK\n";
 }
 
 my $count = 12;
