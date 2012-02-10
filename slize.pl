@@ -36,7 +36,7 @@ sub slizik {
 	close $F;
 
 	print "Running nona: $ptofile -> $outfile...\n";
-	system("nona -o $outfile $ptofile") or die "Could not remap image.";
+	system("nona -o $outfile $ptofile") == 0 or die "Could not remap image";
 	print "Cropping the resulting image...\n";
 	system("mogrify "
 		. "-quality $quality "
@@ -45,7 +45,7 @@ sub slizik {
 			. "+".$left."+".$top." "
 		. "-fill '#2c5573' -fuzz 5% -opaque black "
 		. "$outfile"
-	) or die "Could not postprocess image.";
+	) == 0 or die "Could not postprocess image.";
 	
 	print "$outfile saved.\n";
 }
