@@ -1,1 +1,17 @@
-Globe stripes generator. Further doc TBD.
+globusator: globe stripes generator
+-----------------------------------
+
+Usage: ./slize.pl [--option arg] [--option arg] infile.jpg
+
+Some options can be found in the source code, most notably:
+	--outprefix prefix	Output files will be named like $prefix-42.jpg.
+	--height 3600		Length of the stripes, in pixels.
+	--stripes 12		Number of the stripes.
+	--quality 95		JPEG quality.
+
+Dependencies:
+	imagemagic: mogrify
+	panotools : nona
+	identify  : identify
+
+Arguably the best results can be achieved with almost square input images.
