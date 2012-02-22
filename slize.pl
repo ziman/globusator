@@ -5,6 +5,9 @@
 # Create globe stripes along meridians out of a (roughly) square map of a city.
 # Author: Matus Tejiscak <functor.sk@ziman>
 #
+# The source map is projected using the stereographic projection onto the globe.
+# After that, meridian stripes are created using Transverse Mercator.
+#
 # Licensed under BSD3.
 
 use strict;
