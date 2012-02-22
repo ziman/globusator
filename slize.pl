@@ -1,9 +1,17 @@
 #!/usr/bin/perl -w
 
+# slize.pl
+# 
+# Create globe stripes along meridians out of a (roughly) square map of a city.
+# Author: Matus Tejiscak <functor.sk@ziman>
+#
+# Licensed under BSD3.
+
 use strict;
 use warnings;
 use Math::Round;
 
+# Create one stripe
 sub slizik {
 	my ($cfg, $yaw, $outfile) = @_;
 
@@ -26,6 +34,7 @@ sub slizik {
 	my $top   = round(($centery-$dy) * $h);
 	my $bot   = round(($centery+$dy) * $h);
 
+	# Generate the corresponding PTO file
 	print "$outfile: ";
 	print "PTO ";
 	open my $F, ">$cfg->{ptofile}";
@@ -36,8 +45,11 @@ sub slizik {
 	print $F "v r0\nv p0\nv y0\nv\n";
 	close $F;
 
+	# Remap the image
 	print "NONA ";
 	system("nona -o $outfile $cfg->{ptofile}") == 0 or die "Could not remap image";
+
+	# Crop the image
 	print "POSTPROC ";
 	system("mogrify "
 		. "-quality $cfg->{quality} "
@@ -50,6 +62,19 @@ sub slizik {
 	print "- OK\n";
 }
 
+# Print... well, help.
+sub print_help {
+	my ($reason) = @_;
+
+	print "$reason\n";
+	print "Usage: ./slize.pl [--option arg] [--option arg] infile.jpg\n";
+	print "\n";
+	print "Some options can be found by reading the source code (sorry).\n";
+
+	exit(0);
+}
+
+# Default config, >>optionlist<<
 my %cfg = (
 	outprefix => 'out',
 	srcfile   => 'input.jpg',
@@ -61,17 +86,20 @@ my %cfg = (
 
 # Process the cmdline
 my $arg = shift;
+if (not defined ($arg) or $arg eq '--help') {
+	print_help("Help requested.");
+}
 while ($arg =~ /^--/)
 {
 	my $val = shift;
-	die "The option --$arg requires a value to follow it" unless defined $val;
+	print_help("The option --$arg requires a value to follow it!") unless defined $val;
 
 	$arg =~ s/^--//;
 	$cfg{$arg} = $val;
 	$arg = shift;
 }
 
-die "The last argument must be the input image" unless defined $arg;
+print_help("The last argument must be the input image") unless defined $arg;
 $cfg{srcfile} = $arg;
 
 # Autodetect input image dimensions
