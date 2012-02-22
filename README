@@ -14,5 +14,14 @@ Dependencies:
 	panotools : nona
 	identify  : identify
 
-Arguably the best results can be achieved with almost square (or round)
-input images -- you'll find out, anyway.
+Operation:
+	The source map is projected using the stereographic projection onto
+	the globe. After that, meridian stripes are created using Transverse
+	Mercator.
+
+Remarks:
+	Arguably the best results can be achieved with almost square (or round)
+	input images -- you'll find out, anyway.
+
+License:
+	BSD3
