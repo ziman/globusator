@@ -118,7 +118,7 @@ unless (defined $cfg{inw})
 
 # Do the work
 for my $i (0 .. $cfg{stripes}-1) {
-	slizik(\%cfg, $i*360.0/$cfg{stripes}, sprintf("$cfg{outprefix}-%02d.jpg", $i));
+	slizik(\%cfg, -$i*360.0/$cfg{stripes}, sprintf("$cfg{outprefix}-%02d.jpg", $i));
 }
 
 print "Done.\n";
