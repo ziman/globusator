@@ -20,6 +20,7 @@ sub slizik {
 
 	# Generic options
 	my $format = "JPEG c:$cfg->{quality}";
+	my $tmpfile = "sliz.jpg";
 
 	# Pitch and roll
 	my $pitch = 90; # city centre: equator/poles?
@@ -50,16 +51,19 @@ sub slizik {
 
 	# Remap the image
 	print "NONA ";
-	system("nona -o $outfile $cfg->{ptofile}") == 0 or die "Could not remap image";
+	system("nona -o ${tmpfile} $cfg->{ptofile}") == 0 or die "Could not remap image";
 
-	# Crop the image
+	# Add template the image
 	print "POSTPROC ";
-	system("mogrify "
-		. "-quality $cfg->{quality} "
-		. "-crop "
-			. ($right-$left)."x".($bot-$top)
-			. "+".$left."+".$top." "
-		. "$outfile"
+	my $w_final = $right - $left;
+	my $h_final = $bot - $top;
+	system("composite "
+		. "-background transparent "
+		. "-filter Sinc "
+		. "-geometry '${w_final}x${h_final}!' "
+		. "sine.svg "
+		. "${tmpfile} "
+		. "${outfile} "
 	) == 0 or die "Could not postprocess image.";
 	
 	print "- OK\n";
